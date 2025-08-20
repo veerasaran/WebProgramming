@@ -1,0 +1,105 @@
+:root {
+  --green: rgb(76, 175, 80);
+  --border: #ddd;
+  --muted: #555;
+  --card: #fff;
+  --bg: #f5f5f5;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+}
+
+header {
+  text-align: center;
+  padding: 20px;
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.subtitle {
+  color: var(--muted);
+}
+
+.container {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 10px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.field {
+  flex: 1;
+  min-width: 200px;
+}
+
+label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+
+input, select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+#addMaterialBtn {
+  background: var(--green);
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#addMaterialBtn:hover {
+  opacity: 0.9;
+}
+
+#error-message {
+  color: red;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.meta {
+  margin-top: 10px;
+  display: flex;
+  gap: 20px;
+  color: var(--muted);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 10px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
