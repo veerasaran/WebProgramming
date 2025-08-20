@@ -1,105 +1,83 @@
-:root {
-  --green: rgb(76, 175, 80);
-  --border: #ddd;
-  --muted: #555;
-  --card: #fff;
-  --bg: #f5f5f5;
-}
-
 body {
-  margin: 0;
   font-family: Arial, sans-serif;
-  background: var(--bg);
-}
-
-header {
-  text-align: center;
+  background: #f5f5f5;
+  margin: 0;
   padding: 20px;
-  background: #fff;
-  border-bottom: 1px solid var(--border);
 }
 
 h1 {
-  margin: 0;
-  font-size: 1.8rem;
+  text-align: center;
+  color: #333;
 }
 
-.subtitle {
-  color: var(--muted);
-}
-
-.container {
-  max-width: 900px;
+.form-container {
+  max-width: 400px;
+  background: white;
   margin: 20px auto;
-  padding: 10px;
-}
-
-.card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
   padding: 20px;
-  margin-bottom: 20px;
-}
-
-.grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-}
-
-.field {
-  flex: 1;
-  min-width: 200px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 label {
-  font-weight: bold;
   display: block;
-  margin-bottom: 5px;
+  margin-top: 10px;
+  font-weight: bold;
 }
 
 input, select {
   width: 100%;
   padding: 8px;
-  border: 1px solid var(--border);
+  margin-top: 5px;
+  border: 1px solid #ccc;
   border-radius: 6px;
 }
 
-#addMaterialBtn {
-  background: var(--green);
-  color: #fff;
+#addAlbumBtn {
+  margin-top: 15px;
+  width: 100%;
+  padding: 10px;
+  background-color: rgb(76, 175, 80);
   border: none;
-  padding: 10px 16px;
+  color: white;
+  font-size: 16px;
   border-radius: 6px;
   cursor: pointer;
-  font-weight: bold;
 }
 
-#addMaterialBtn:hover {
-  opacity: 0.9;
+#addAlbumBtn:hover {
+  background-color: rgb(56, 142, 60);
 }
 
 #error-message {
   color: red;
-  font-weight: bold;
-  margin-left: 10px;
-}
-
-.meta {
+  font-size: 14px;
   margin-top: 10px;
-  display: flex;
-  gap: 20px;
-  color: var(--muted);
+  display: block;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
+.list-container {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-th, td {
-  padding: 10px;
-  border-bottom: 1px solid var(--border);
-  text-align: left;
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+ul li {
+  padding: 8px;
+  margin-bottom: 6px;
+  background: #f0f0f0;
+  border-radius: 6px;
+}
+
+h2 {
+  margin-top: 0;
+  color: #444;
 }
