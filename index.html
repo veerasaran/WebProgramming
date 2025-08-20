@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Building Material Inventory Management System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root{
+      --green: rgb(76, 175, 80);
+      --bg: #f7f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+    }
+    header{
+      text-align:center;
+      padding:20px 12px;
+      background:#fff;
+      border-bottom:1px solid var(--border);
+    }
+    h1{margin:0 0 8px}
+    .subtitle{margin:0;color:var(--muted)}
+    .container{
+      max-width: 960px;
+      margin: 20px auto;
+      padding: 0 12px;
+    }
+    .card{
+      background: var(--card);
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:20px;
+      margin-bottom:20px;
+      box-shadow: 0 1px 2px rgba(0,0,0,.03);
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap:12px;
+    }
+    .field{grid-column: span 12; display:flex; flex-direction:column;}
+    .field.span-6{grid-column: span 6;}
+    .field.span-4{grid-column: span 4;}
+    label{font-weight:bold; margin-bottom:6px;}
+    input, select{
+      padding:10px;
+      border:1px solid var(--border);
+      border-radius:8px;
+      font-size:14px;
+      background:#fff;
+    }
+    .actions{
+      display:flex; align-items:center; gap:12px; margin-top:12px;
+      flex-wrap:wrap;
+    }
+    #addMaterialBtn{
+      background: var(--green);
+      color:#fff;
+      padding:10px 16px;
+      border:none;
+      border-radius:8px;
+      cursor:pointer;
+      font-weight:bold;
+    }
+    #addMaterialBtn:hover{filter:brightness(.97)}
+    #error-message{color:#d00; font-weight:bold; min-height:1.2em}
+    .meta{margin-top:10px; color:var(--muted); font-weight:bold; display:flex; gap:16px; flex-wrap:wrap;}
+    table{width:100%; border-collapse:collapse; border:1px solid var(--border); border-radius:10px; overflow:hidden;}
+    thead{background:#fafafa}
+    th, td{padding:10px; border-bottom:1px solid var(--border); text-align:left;}
+    @media (max-width: 720px){
+      .field.span-6, .field.span-4{grid-column: span 12;}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Building Material Inventory Management System</h1>
+    <p class="subtitle">Add materials, track totals, and see the most expensive item at a glance.</p>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Add New Material</h2>
+
+      <form id="materialForm" novalidate>
+        <div class="grid">
+          <div class="field span-6">
+            <label for="materialName">Material Name</label>
+            <input type="text" id="materialName" placeholder="e.g., Plywood Sheet" />
+          </div>
+
+          <div class="field span-6">
+            <label for="category">Material Category</label>
+            <select id="category">
+              <option value="">Select Category</option>
+              <option value="Wood">Wood</option>
+              <option value="Cement">Cement</option>
+              <option value="Steel">Steel</option>
+              <option value="Bricks">Bricks</option>
+              <option value="Glass">Glass</option>
+            </select>
+          </div>
+
+          <div class="field span-4">
+            <label for="quantity">Quantity</label>
+            <input type="number" id="quantity" placeholder="e.g., 50" />
+          </div>
+
+          <div class="field span-4">
+            <label for="supplierName">Supplier Name</label>
+            <input type="text" id="supplierName" placeholder="e.g., ABC Traders" />
+          </div>
+
+          <div class="field span-4">
+            <label for="costPerUnit">Cost Per Unit</label>
+            <input type="number" id="costPerUnit" placeholder="e.g., 1200" />
+          </div>
+        </div>
+
+        <div class="actions">
+          <button id="addMaterialBtn" type="button">Submit Material</button>
+          <span id="error-message"></span>
+        </div>
+
+        <div class="meta">
+          <span>Total Products: <strong id="totalProducts">0</strong></span>
+          <span>Most Expensive: <strong id="mostExpensive">None</strong></span>
+        </div>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Inventory List</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Material Name</th>
+            <th>Category</th>
+            <th>Quantity</th>
+            <th>Supplier</th>
+            <th>Cost / Unit</th>
+          </tr>
+        </thead>
+        <tbody id="materialTable"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    // Data store
+    const materials = [];
+    let currentMostExpensive = null; // { name, costPerUnit }
+
+    // Elements
+    const materialNameEl = document.getElementById('materialName');
+    const categoryEl = document.getElementById('category');
+    const quantityEl = document.getElementById('quantity');
+    const supplierNameEl = document.getElementById('supplierName');
+    const costPerUnitEl = document.getElementById('costPerUnit');
+
+    const addBtn = document.getElementById('addMaterialBtn');
+    const errorEl = document.getElementById('error-message');
+    const tableBody = document.getElementById('materialTable');
+    const totalProductsEl = document.getElementById('totalProducts');
+    const mostExpensiveEl = document.getElementById('mostExpensive');
+
+    function showError(msg){ errorEl.textContent = msg; }
+    function clearError(){ errorEl.textContent = ''; }
+
+    function clearInputs(){
+      materialNameEl.value = '';
+      categoryEl.value = '';
+      quantityEl.value = '';
+      supplierNameEl.value = '';
+      costPerUnitEl.value = '';
+      materialNameEl.focus();
+    }
+
+    function updateTotals(){
+      totalProductsEl.textContent = materials.length;
+    }
+
+    function updateMostExpensiveIfNeeded(newItem){
+      const price = Number(newItem.costPerUnit);
+      if (!currentMostExpensive || price > currentMostExpensive.costPerUnit){
+        currentMostExpensive = { name: newItem.materialName, costPerUnit: price };
+        mostExpensiveEl.textContent = currentMostExpensive.name + ' - ' + currentMostExpensive.costPerUnit;
+      }
+    }
+
+    function appendRow(item){
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${item.materialName}</td>
+        <td>${item.category}</td>
+        <td>${item.quantity}</td>
+        <td>${item.supplierName}</td>
+        <td>${item.costPerUnit}</td>
+      `;
+      tableBody.appendChild(tr); // preserves insertion order
+    }
+
+    function handleAdd(){
+      clearError();
+
+      const materialName = materialNameEl.value.trim();
+      const category = categoryEl.value.trim();
+      const quantity = quantityEl.value;
+      const supplierName = supplierNameEl.value.trim();
+      const costPerUnit = costPerUnitEl.value;
+
+      // Required-field validation (exact message per spec)
+      if (!materialName || !category || !quantity || !supplierName || !costPerUnit){
+        showError('Please fill out all fields!');
+        return;
+      }
+
+      const newItem = { materialName, category, quantity, supplierName, costPerUnit };
+      materials.push(newItem);
+
+      appendRow(newItem);
+      updateTotals();
+      updateMostExpensiveIfNeeded(newItem);
+      clearInputs();
+    }
+
+    addBtn.addEventListener('click', handleAdd);
+  </script>
+</body>
+</html>
